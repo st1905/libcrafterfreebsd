@@ -24,14 +24,28 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef __APPLE__
-#include <netinet/ether.h>
-#else
-#include <netinet/if_ether.h>
-#endif
-#include <cstdio>
+
+//#include <cstdio>
+//#include <cstring>
+#include <stdint.h>
 #include "MACAddress.h"
 #include "config.h"
+//#include <netinet/if_ether.h>
+#include <cstdio>
+#include <cstring>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+//#include <net/ethernet.h>
+#include <netinet/if_ether.h>
+#include <ifaddrs.h>
+#include <net/if_types.h>
+#ifdef __APPLE__
+#include <net/if_dl.h>
+#include <net/if_types.h>
+#endif
+#include <net/if.h>
 
 using namespace std;
 using namespace Crafter;
@@ -87,7 +101,7 @@ struct ether_addr *ether_aton_r(const char *asc, struct ether_addr *addr)
 		}
 
 		/* Store result.  */
-		addr->ether_addr_octet[cnt] = (unsigned char) number;
+		addr->octet[cnt] = (unsigned char) number;
 
 		/* Skip ':'.  */
 		++asc;
@@ -111,9 +125,9 @@ void MACAddress::Read(const byte* raw_data) {
 	const struct ether_addr * ptr = (const struct ether_addr *) (raw_data + offset);
 	char buf[19];
 	  sprintf (buf, "%02x:%02x:%02x:%02x:%02x:%02x",
-			  ptr->ether_addr_octet[0], ptr->ether_addr_octet[1],
-			  ptr->ether_addr_octet[2], ptr->ether_addr_octet[3],
-			  ptr->ether_addr_octet[4], ptr->ether_addr_octet[5]);
+			  ptr->octet[0], ptr->octet[1],
+			  ptr->octet[2], ptr->octet[3],
+			  ptr->octet[4], ptr->octet[5]);
 	buf[18] = 0;
 	human = string(buf);
 }

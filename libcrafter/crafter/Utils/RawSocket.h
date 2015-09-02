@@ -37,14 +37,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdlib>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <stdio.h>
 
-#ifndef __APPLE__
-#include <features.h>
-#include <linux/if_packet.h>
-#include <linux/if_ether.h>
-#else
+#include <sys/cdefs.h>
 #define ETH_P_ALL 1
-#endif
+#define PF_PACKET 1
 
 #include <cerrno>
 #include <sys/ioctl.h>
@@ -54,6 +51,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 
 #include "../Types.h"
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/sockio.h>
+#include <net/if_dl.h>
+#include <netinet/tcp.h>
+#include <netinet/ip.h>
+#include <netinet/ip_carp.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <ifaddrs.h>
+#include <itpp/protocol/packet.h>
+#include <net/if_dl.h>
+#include <net/if.h>
+#include <net/if_arp.h>
+#include <netinet/if_ether.h>
+
 
 namespace Crafter {
 

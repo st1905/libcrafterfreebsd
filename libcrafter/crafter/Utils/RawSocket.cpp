@@ -34,11 +34,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <net/route.h>
 #endif
 
+
 #include "RawSocket.h"
 #include "PrintMessage.h"
 #include "../Layer.h"
 #include "../Protocols/IP.h"
 #include "../Protocols/IPv6.h"
+#include "sys/sockio.h"
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <ifaddrs.h>
+#include <netinet/ip.h>
 
 using namespace std;
 using namespace Crafter;
@@ -207,7 +214,7 @@ int Crafter::SocketSender::BindLinkSocketToInterface(const char *device, int raw
 #endif
 
 #else
-	struct sockaddr_ll sll;
+	struct sockaddr_dl sll;
 
 	memset(&sll,0,sizeof(sll));
 	memset(&ifr,0,sizeof(ifr));
@@ -220,9 +227,11 @@ int Crafter::SocketSender::BindLinkSocketToInterface(const char *device, int raw
 	}
 
 	/* Bind our raw socket to this interface */
-	sll.sll_family = AF_PACKET;
-	sll.sll_ifindex = ifr.ifr_ifindex;
-	sll.sll_protocol = htons(protocol);
+	sll.sdl_family = AF_LINK;
+	sll.sdl_index = ifr.ifr_index;
+	//sll.protocol = htons(protocol);
+	
+	
 
 
 	if((bind(rawsock, (struct sockaddr *)&sll, sizeof(sll)))== -1) {
@@ -239,7 +248,7 @@ int Crafter::SocketSender::BindRawSocketToInterface(const char *device, int s)
 #ifndef __APPLE__
     ifreq Interface;
     memset(&Interface, 0, sizeof(Interface));
-    strncpy(Interface.ifr_ifrn.ifrn_name, device, IFNAMSIZ);
+    strncpy(Interface.ifr_name, device, IFNAMSIZ);
     if (ioctl(s, SIOCGIFINDEX, &Interface) < 0) {
     	perror("BindRawSocketToInterface()");
 		throw std::runtime_error("Binding raw socket to interface");
@@ -442,6 +451,9 @@ int Crafter::SocketSender::SendSocket(int rawsock, word proto_id, byte *pkt, siz
 		struct sockaddr_in din;
 	    din.sin_family = AF_INET;
 	    din.sin_port = 0;
+	struct ip *hdr = (struct ip*)pkt;
+	hdr->ip_len = ntohs(hdr->ip_len);
+	hdr->ip_off = ntohs(hdr->ip_off);
 	    memcpy(&din.sin_addr.s_addr,pkt + 16,sizeof(din.sin_addr.s_addr));
 	    memset(din.sin_zero, '\0', sizeof (din.sin_zero));
 

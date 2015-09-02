@@ -32,7 +32,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <net/ethernet.h>
+#include <netinet/if_ether.h>
 #include <ifaddrs.h>
+#include <net/if_types.h>
 #ifdef __APPLE__
 #include <net/if_dl.h>
 #include <net/if_types.h>
@@ -59,9 +61,9 @@ string Crafter::GetMyMAC(const string& iface) {
 		memcpy(&ptr,s.ifr_addr.sa_data,sizeof(struct ether_addr));
 		char buf[19];
 		sprintf (buf, "%02x:%02x:%02x:%02x:%02x:%02x",
-			  ptr.ether_addr_octet[0], ptr.ether_addr_octet[1],
-			  ptr.ether_addr_octet[2], ptr.ether_addr_octet[3],
-			  ptr.ether_addr_octet[4], ptr.ether_addr_octet[5]);
+			  ptr.octet[0], ptr.octet[1],
+			  ptr.octet[2], ptr.octet[3],
+			  ptr.octet[4], ptr.octet[5]);
 		buf[18] = 0;
 		close(fd);
 		return string(buf);
@@ -86,9 +88,9 @@ string Crafter::GetMyMAC(const string& iface) {
 			memcpy(&ptr, &dl->sdl_data[dl->sdl_nlen], sizeof(struct ether_addr));
 			char buf[19];
 			sprintf (buf, "%02x:%02x:%02x:%02x:%02x:%02x",
-				 ptr.ether_addr_octet[0], ptr.ether_addr_octet[1],
-				 ptr.ether_addr_octet[2], ptr.ether_addr_octet[3],
-				 ptr.ether_addr_octet[4], ptr.ether_addr_octet[5]);
+				 ptr.octet[0], ptr.octet[1],
+				 ptr.octet[2], ptr.octet[3],
+				 ptr.octet[4], ptr.octet[5]);
 			buf[18] = 0;
 			return string(buf);
 		}

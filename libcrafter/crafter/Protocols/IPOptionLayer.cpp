@@ -25,12 +25,26 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
 #include "IPOptionLayer.h"
 #include "IPOption.h"
 #include "IPOptionPad.h"
 #include "IPOptionPointer.h"
 #include "IPOptionTraceroute.h"
+#include <iostream>
+#include <map>
+#include <vector>
+#include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <cstring>
+#include <unistd.h>
 #include <netinet/ip.h>
+#include <stdint.h>
+
 
 using namespace Crafter;
 

@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "config.h"
 
+#include "stdio.h"
 #include "Packet.h"
 #include "Crafter.h"
 #include "Utils/RawSocket.h"

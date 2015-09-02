@@ -29,6 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "../Layer.h"
 #include "IPv6RoutingHeader.h"
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 namespace Crafter {
 
